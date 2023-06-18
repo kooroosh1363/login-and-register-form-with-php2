@@ -11,6 +11,14 @@
 </head>
 
 <body>
+    <div class="container">
+        <h3>Hello , <span>user</span></h3>
+        <h1>Welcome <span></span></h1>
+        <p>This Is An User Page</p>
+        <a href="./login.php">Login</a>
+        <a href="./register.php">Register</a>
+        <a href="./logout.php">Logout</a>
+    </div>
 
 
 
