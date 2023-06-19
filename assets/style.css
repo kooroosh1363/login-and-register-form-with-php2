@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Noto+Sans:ital,wght@1,900&family=Oswald:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,300;0,500;0,700;1,300;1,500;1,700;1,900&display=swap');
 
-*{
+* {
     font-family: 'Playfair Display', serif;
     box-sizing: border-box;
     outline: none;
@@ -8,7 +8,7 @@
     text-decoration: none;
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
     background: rgb(127, 174, 127);
@@ -16,7 +16,7 @@ body{
 }
 
 /* .container */
-.container{
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,19 +28,19 @@ body{
 
 
 /* content-css */
-.content{
+.content {
     text-align: center;
 }
 
 
 /* h3 */
-.content h3{
+.content h3 {
     font-size: 30px;
     color: #605c5c;
 }
 
 /* span h3 */
-.content h3 span{
+.content h3 span {
     background: rgb(211, 76, 103);
     color: #fff;
     padding: 0 15px;
@@ -48,22 +48,35 @@ body{
 }
 
 /* content h1 */
-.content h1{
+.content h1 {
     font-size: 50px;
-    color:#605c5c; 
+    color: #605c5c;
 
 }
 
 
 
 /* h1 span */
-.content h1 span{
+.content h1 span {
     color: rgb(211, 76, 103);
 }
 
 
-.content p{
+/* content p */
+.content p {
     font-size: 25px;
     margin-bottom: 20px;
 }
 
+
+
+/* btn */
+.btn {
+    display: inline-block;
+    font-size: 20px;
+    color: #fff;
+    background: #755291;
+    padding: 10px 30px;
+    margin: 0 5px;
+    text-transform: capitalize;
+}
