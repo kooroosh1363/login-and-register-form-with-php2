@@ -62,8 +62,21 @@ body{
 }
 
 
+/* content p */
 .content p{
     font-size: 25px;
     margin-bottom: 20px;
+}
+
+
+/* btn */
+.btn{
+    display: inline-block;
+    font-size: 20px;
+    color: #fff;
+    background: #755291;
+    padding: 10px 30px;
+    margin: 0 5px;
+    text-transform: capitalize;
 }
 
