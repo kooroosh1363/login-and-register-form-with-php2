@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./assets/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>Page-User</title>
+    <title>Admin</title>
    
 
 </head>
@@ -15,9 +15,9 @@
 <body>
     <div class="container">
         <div class="content">
-            <h3>Hello , <span>User</span></h3>
+            <h3>Hello , <span>Admin</span></h3>
             <h1>Welcome <span></span></h1>
-            <p>This Is An User Page</p>
+            <p>This Is An admin Page</p>
             <a href="./login.php" class="btn">Login</a>
             <a href="./register.php" class="btn">Register</a>
             <a href="./logout.php" class="btn">Logout</a>

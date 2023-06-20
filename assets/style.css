@@ -78,12 +78,10 @@ body {
     background: #755291 !important;
     padding: 10px 30px;
     margin: 0 5px;
-
     text-transform: capitalize;
 }
 
-    text-transform: capitalize !important;
-}
+
 
 .btn:hover{
     background-color: rgb(193, 210, 210) !important;
