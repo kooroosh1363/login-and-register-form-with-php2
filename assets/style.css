@@ -78,6 +78,10 @@ body {
     background: #755291 !important;
     padding: 10px 30px;
     margin: 0 5px;
+
+    text-transform: capitalize;
+}
+
     text-transform: capitalize !important;
 }
 
@@ -88,3 +92,4 @@ body {
     backdrop-filter: blur(25px) !important;
     color:#74459a !important;
 }
+
