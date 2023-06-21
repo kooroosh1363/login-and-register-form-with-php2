@@ -59,6 +59,7 @@ include './config.php';
                 </select>
             </div>
             <input type="submit" name="sub" value="Register Now" class=""btn-form>
+            <p>Already Have A Account <a href="./login.php">Login Now</a></p>
         </form>
     </div>
 
