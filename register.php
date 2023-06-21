@@ -22,7 +22,7 @@ include './config.php';
 
 <body>
 
-    <div class="containe-form">
+    <div class="container-form">
         <form action="#" method="POST">
             <img src="image source" class="img" alt="image">
             <?php
@@ -58,7 +58,7 @@ include './config.php';
                     <option value="admin">Admin</option>
                 </select>
             </div>
-            <input type="submit" name="sub" value="Register Now" class=""btn-form>
+            <input type="submit" name="sub" value="Register Now" class="btn-form">
             <p>Already Have A Account <a href="./login.php">Login Now</a></p>
         </form>
     </div>
