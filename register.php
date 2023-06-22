@@ -2,6 +2,16 @@
 
 include './config.php';
 
+if (isset($_POST['sub'])) {
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = md5($conn, $_POST['password']);
+    $confirm = md5($conn, $_POST['confirm']);
+    $userType = $_POST['userType'];
+
+    $selectUser = "SELECT * FROM users WHERE email= '$email' && password = '$password'" ;
+    $result = mysqli_query($conn, $selectUser);
+}
 ?>
 
 
