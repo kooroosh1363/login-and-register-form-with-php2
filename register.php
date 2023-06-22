@@ -11,6 +11,14 @@ if (isset($_POST['sub'])) {
 
     $selectUser = "SELECT * FROM users WHERE email= '$email' && password = '$password'" ;
     $result = mysqli_query($conn, $selectUser);
+
+    if (mysqli_num_rows($result) > 0) {
+        $error[] = 'user already exist';
+    }else{
+        if ($password != $confirm){
+            $error[]
+        }
+    }
 }
 ?>
 
