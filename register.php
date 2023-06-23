@@ -46,7 +46,7 @@ if (isset($_POST['sub'])) {
 
     <div class="container-form">
         <form action="#" method="POST">
-            <!-- <img src="image source" class="img" alt="image"> -->
+           
             <?php
 
             if (isset($error)) {
