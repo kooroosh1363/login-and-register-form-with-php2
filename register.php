@@ -5,8 +5,8 @@ include './config.php';
 if (isset($_POST['sub'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = md5($conn, $_POST['password']);
-    $confirm = md5($conn, $_POST['confirm']);
+    $password = md5($_POST['password']);
+    $confirm = md5($_POST['confirm']);
     $userType = $_POST['userType'];
 
     $selectUser = "SELECT * FROM users WHERE email= '$email' && password = '$password'" ;
@@ -16,7 +16,11 @@ if (isset($_POST['sub'])) {
         $error[] = 'user already exist';
     }else{
         if ($password != $confirm){
-            $error[]
+            $error[]='password is not matched';
+        }else{
+            $insert= "INSERT INTO users(name, email, password, userType) VALUES('$name','$email','$password','$userType')";
+            mysqli_query($conn, $insert);
+            header('location:login.php');
         }
     }
 }
@@ -42,7 +46,7 @@ if (isset($_POST['sub'])) {
 
     <div class="container-form">
         <form action="#" method="POST">
-            <img src="image source" class="img" alt="image">
+            <!-- <img src="image source" class="img" alt="image"> -->
             <?php
 
             if (isset($error)) {
@@ -55,7 +59,7 @@ if (isset($_POST['sub'])) {
             <h3>Register Now</h3>
             <div class="field-input">
                 <p>Your Name <sup>*</sup></p>
-                <input type="text" name="username" required placeholder="Please Enter Your Name">
+                <input type="text" name="name" required placeholder="Please Enter Your Name">
             </div>
             <div class="field-input">
                 <p>Your Email <sup>*</sup></p>
@@ -71,7 +75,7 @@ if (isset($_POST['sub'])) {
             </div>
             <div class="field-input">
                 <p>User Type<sup>*</sup></p>
-                <select name="type-user" >
+                <select name="userType" >
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                 </select>
