@@ -10,6 +10,22 @@ if (isset($_POST['sub'])) {
     $confirm = md5($_POST['confirm']);
     $userType = $_POST['userType'];
 
+    $selectUser = "SELECT * FROM users WHERE email= '$email' && password = '$password'" ;
+    $result = mysqli_query($conn, $selectUser);
+    if (mysqli_num_rows($result)>0) {
+        $row = mysqli_fetch_array($result);
+
+        if ($row['userType']=='admin') {
+            $_SESSION['admin_name'] = $row['name'];
+            header('location:admin.php');
+        }elseif($row['userType'] == 'user'){
+            $_SESSION['user-name'] = $row['name'];
+            header('location:page_user.php');
+
+        }else{
+            $error[]='incorrect password or email';
+        }
+    }
     
 }
 ?>
