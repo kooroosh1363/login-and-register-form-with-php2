@@ -70,7 +70,7 @@ if (isset($_POST['sub'])) {
                 <input type="password" name="password" required placeholder="Please Enter Your password">
             </div>
             <input type="submit" name="sub" value="Login" class="btn-form">
-            <p>Already Have A Account <a href="./register.php">Login Now</a></p>
+            <p>Already Have A Account <a href="./register.php">Register Now</a></p>
         </form>
     </div>
 
