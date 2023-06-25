@@ -16,10 +16,10 @@ if (isset($_POST['sub'])) {
         $row = mysqli_fetch_array($result);
 
         if ($row['userType']=='admin') {
-            $_SESSION['admin_name'] = $row['name'];
+            $_SESSION['name'] = $row['name'];
             header('location:admin.php');
         }elseif($row['userType'] == 'user'){
-            $_SESSION['user-name'] = $row['name'];
+            $_SESSION['name'] = $row['name'];
             header('location:page_user.php');
 
         }else{

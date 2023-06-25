@@ -1,3 +1,16 @@
+<?php 
+
+@include './config.php';
+
+session_start();
+
+if (!isset($_SESSION['name'])) {
+    header('location:./login.php');
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +29,7 @@
     <div class="container">
         <div class="content">
             <h3>Hello , <span>User</span></h3>
-            <h1>Welcome <span></span></h1>
+            <h1>Welcome <span><?php echo $_SESSION['name'] ; ?></span></h1>
             <p>This Is An User Page</p>
             <a href="./login.php" class="btn">Login</a>
             <a href="./register.php" class="btn">Register</a>
