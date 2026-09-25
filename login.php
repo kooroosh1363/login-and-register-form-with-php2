@@ -1,82 +1,101 @@
 <?php
+declare(strict_types=1);
+require_once __DIR__ . '/src/bootstrap.php';
 
-include './config.php';
-session_start();
+$current = authenticated_user();
+if ($current !== null) {
+    redirect(dashboard_for_role($current['role']));
+}
 
-if (isset($_POST['sub'])) {
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = md5($_POST['password']);
-    $confirm = md5($_POST['confirm']);
-    $userType = $_POST['userType'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = LoginValidator::normalize($_POST);
+    $errors = LoginValidator::validate($data);
 
-    $selectUser = "SELECT * FROM users WHERE email= '$email' && password = '$password'" ;
-    $result = mysqli_query($conn, $selectUser);
-    if (mysqli_num_rows($result)>0) {
-        $row = mysqli_fetch_array($result);
-
-        if ($row['userType']=='admin') {
-            $_SESSION['name'] = $row['name'];
-            header('location:admin.php');
-        }elseif($row['userType'] == 'user'){
-            $_SESSION['name'] = $row['name'];
-            header('location:page_user.php');
-
-        }else{
-            $error[]='incorrect password or email';
-        }
+    if (!csrf_is_valid($_POST['_token'] ?? null)) {
+        $errors['form'] = 'Your session expired. Please try again.';
     }
-    
+
+    if ($errors === []) {
+        $result = $authService->attempt($data['email'], $data['password'], time());
+
+        if ($result['ok'] && is_array($result['user'])) {
+            sign_in_session($result['user']);
+            redirect(dashboard_for_role($result['user']['role']));
+        }
+
+        $errors['form'] = $result['reason'] === 'locked'
+            ? 'Too many sign-in attempts. Please wait a few minutes.'
+            : 'The email or password is incorrect.';
+    }
+
+    flash('login_errors', $errors);
+    flash('login_email', $data['email']);
+    redirect('/login.php');
+}
+
+$errors = pull_flash('login_errors', []);
+$oldEmail = pull_flash('login_email', '');
+$notice = pull_flash('notice');
+$registered = pull_flash('registered');
+
+function login_error(array $errors, string $field): ?string {
+    return isset($errors[$field]) && is_string($errors[$field]) ? $errors[$field] : null;
 }
 ?>
-
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>Register</title>
-
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="AccessBoundary secure PHP role-based authentication demo.">
+<meta name="color-scheme" content="light dark">
+<title>AccessBoundary — Sign in</title>
+<link rel="stylesheet" href="/assets/style.css">
 </head>
-
 <body>
+<a class="skip-link" href="#login-form">Skip to sign in</a>
+<main class="auth-shell">
+<section class="story-panel">
+<a class="brand" href="/"><span class="brand-mark">AB</span><span>AccessBoundary</span></a>
+<div class="story-copy">
+<p class="eyebrow">Role-based access control / PHP + PDO</p>
+<h1>Authentication answers who you are. Authorization decides where you may go.</h1>
+<p>This demo separates public registration from privileged administration. New public accounts are always regular users; administrator access is provisioned only through a trusted CLI path.</p>
+</div>
+<div class="boundary-grid">
+<article><span>Public</span><strong>Register as user</strong><p>No role selector is exposed to the browser.</p></article>
+<article><span>Trusted</span><strong>Create admin via CLI</strong><p>Privileged accounts come from an operator-controlled path.</p></article>
+<article><span>Runtime</span><strong>Enforce role guards</strong><p>Admin and user routes verify authorization server-side.</p></article>
+</div>
+</section>
 
-    <div class="container-form">
-        <form action="#" method="POST">
-           
-            <?php
+<section class="form-panel">
+<div class="form-card">
+<p class="section-index">Access / 01</p>
+<h2>Sign in</h2>
+<p class="form-intro">Your destination is selected from the role stored in the database, never from form input.</p>
 
-            if (isset($error)) {
-                foreach ($error as $error) {
-                    echo '<span class="msg-error">' . $error . '</span>';
-                }
-            }
+<?php if (is_string($registered) && $registered !== ''): ?><div class="notice notice--success" role="status"><?= e($registered) ?></div><?php endif; ?>
+<?php if (is_string($notice) && $notice !== ''): ?><div class="notice" role="status"><?= e($notice) ?></div><?php endif; ?>
+<?php if (($errors['form'] ?? null) !== null): ?><div class="notice notice--error" role="alert"><?= e((string)$errors['form']) ?></div><?php endif; ?>
 
-            ?>
-            <h3>Login</h3>
-            <div class="field-input">
-                <p>Enter Your Email <sup>*</sup></p>
-                <input type="email" name="email" required placeholder="Please Enter Your Email">
-            </div>
-            <div class="field-input">
-                <p>Enter Your Password <sup>*</sup></p>
-                <input type="password" name="password" required placeholder="Please Enter Your password">
-            </div>
-            <input type="submit" name="sub" value="Login" class="btn-form">
-            <p>Already Have A Account <a href="./register.php">Register Now</a></p>
-        </form>
-    </div>
+<form id="login-form" method="post" action="/login.php" novalidate>
+<input type="hidden" name="_token" value="<?= e(csrf_token()) ?>">
+<div class="field">
+<label for="email">Email</label>
+<input id="email" name="email" type="email" autocomplete="username" maxlength="254" required value="<?= e(is_string($oldEmail)?$oldEmail:'') ?>" <?= login_error($errors,'email') ? 'aria-invalid="true" aria-describedby="email-error"' : '' ?>>
+<?php if ($error=login_error($errors,'email')): ?><p id="email-error" class="field-error"><?= e($error) ?></p><?php endif; ?>
+</div>
+<div class="field">
+<label for="password">Password</label>
+<input id="password" name="password" type="password" autocomplete="current-password" maxlength="4096" required <?= login_error($errors,'password') ? 'aria-invalid="true" aria-describedby="password-error"' : '' ?>>
+<?php if ($error=login_error($errors,'password')): ?><p id="password-error" class="field-error"><?= e($error) ?></p><?php endif; ?>
+</div>
+<button class="primary-button" type="submit">Sign in →</button>
+</form>
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<p class="switch-link">Need a regular account? <a href="/register.php">Register</a></p>
+</div>
+</section>
+</main>
 </body>
-
 </html>
