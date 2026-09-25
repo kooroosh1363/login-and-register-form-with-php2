@@ -1,45 +1,37 @@
-<?php 
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/src/bootstrap.php';
 
-@include './config.php';
-
-session_start();
-
-if (!isset($_SESSION['name'])) {
-    header('location:./login.php');
+$sessionUser = require_role(Roles::USER);
+$account = $userRepository->findById($sessionUser['id']);
+if ($account === null || !Authorization::canAccessUserArea($account)) {
+    http_response_code(403);
+    exit('Forbidden');
 }
 ?>
-
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <title>Page-User</title>
-   
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Protected regular-user dashboard for AccessBoundary RBAC demo.">
+<meta name="color-scheme" content="light dark">
+<title>User Dashboard — AccessBoundary</title>
+<link rel="stylesheet" href="/assets/style.css">
 </head>
-
 <body>
-    <div class="container">
-        <div class="content">
-            <h3>Hello , <span>User</span></h3>
-            <h1>Welcome <span><?php echo $_SESSION['name'] ; ?></span></h1>
-            <p>This Is An User Page</p>
-            <a href="./login.php" class="btn">Login</a>
-            <a href="./register.php" class="btn">Register</a>
-            <a href="./logout.php" class="btn">Logout</a>
-        </div>
-    </div>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<header class="dashboard-header">
+<a class="brand" href="/page_user.php"><span class="brand-mark">AB</span><span>AccessBoundary</span></a>
+<div class="header-actions"><span class="role-badge role-badge--user">user</span><form method="post" action="/logout.php"><input type="hidden" name="_token" value="<?= e(csrf_token()) ?>"><button class="secondary-button" type="submit">Sign out</button></form></div>
+</header>
+<main class="dashboard-shell">
+<p class="eyebrow">Protected route / regular user</p>
+<h1>Welcome, <?= e($account['name']) ?>.</h1>
+<p class="dashboard-lead">Your session carries the <strong>user</strong> role. That role authorizes this page and does not authorize the administrator route.</p>
+<section class="user-cards">
+<article><span>Identity</span><strong><?= e($account['email']) ?></strong><p>Account identity comes from the database.</p></article>
+<article><span>Role</span><strong><?= e($account['role']) ?></strong><p>Public registration cannot choose or elevate this value.</p></article>
+<article><span>Boundary</span><strong>Least privilege</strong><p>Admin access requires a separately provisioned administrator account.</p></article>
+</section>
+</main>
 </body>
-
 </html>
