@@ -1,9 +1,6 @@
-<?php 
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/src/bootstrap.php';
 
-$conn = mysqli_connect('localhost','root','','db_log_reg_2');
-
-if (!$conn) {
-    echo "did not connected";
-}
-
-?>
+// Legacy compatibility alias. New code should use the PDO instance directly.
+$conn = $pdo;
